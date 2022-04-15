@@ -16,4 +16,6 @@ social: true  # includes social icons at the bottom of the page
 
 Welcome to my personal page. Learn more about my research interests and my latest news here! 
 
-I'm currently a second-year PhD student at ENS and Inria, under the supervision of [Julien Mairal](thoth.inrialpes.fr/people/mairal/) and [Alessandro Rudi](https://www.di.ens.fr/~rudi/). My research focuses on kernel methods in all sort of flavours, but I'm also interested in providing fast and reliable implementation -- soon to be in Rust !
+I'm currently a second-year PhD student at ENS and Inria, under the supervision of [Julien Mairal](thoth.inrialpes.fr/people/mairal/) and [Alessandro Rudi](https://www.di.ens.fr/~rudi/). My research focuses on theoretical properties of kernel methods in all sorts of flavour, but I'm also interested in providing fast and reliable implementation of my research projects. 
+
+Currently, I'm interested in non-convex optimization, and I'm enthusiastic about [Rust](https://www.rust-lang.org/), which I hope to use for my research along with Python!
