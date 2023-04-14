@@ -1,77 +1,54 @@
 ---
 ---
 
-@string{aps = {American Physical Society,}}
-
-@book{einstein1956investigations,
-  bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation,},
-  preview={brownian-motion.gif}
+@inproceedings{beugnot2021beyond,
+  title     = {Beyond Tikhonov: faster learning with self-concordant losses, via iterative regularization},
+  author    = {Beugnot, Gaspard and Mairal, Julien and Rudi, Alessandro},
+  booktitle = {Advances in Neural Information Processing Systems},
+  editor    = {A. Beygelzimer and Y. Dauphin and P. Liang and J. Wortman Vaughan},
+  year      = {2021},
+  url       = {https://openreview.net/forum?id=eIdzV1-Jdwv},
+  abstract  = {The theory of spectral filtering is a remarkable tool to understand the statistical properties of learning with kernels. For least squares, it allows to derive various regularization schemes that yield faster convergence rates of the excess risk than with Tikhonov regularization. This is typically achieved by leveraging classical assumptions called source and capacity conditions, which characterize the difficulty of the learning task. In order to understand estimators derived from other loss functions, Marteau-Ferey et al. have extended the theory of Tikhonov regularization to generalized self concordant loss functions (GSC), which contain, e.g., the logistic loss. In this paper, we go a step further and show that fast and optimal rates can be achieved for GSC by using the iterated Tikhonov regularization scheme, which is intrinsically related to the proximal point method in optimization, and overcomes the limitation of the classical Tikhonov regularization.},
+  selected  = {true},
+  html      = {https://openreview.net/forum?id=eIdzV1-Jdwv},
+  pdf       = {https://proceedings.neurips.cc/paper/2021/file/eda80a3d5b344bc40f3bc04f65b7a357-Paper.pdf},
+  conf      = {NeurIPS21},
+  award     = {Spotlight},
+  video = {https://nips.cc/virtual/2021/poster/26184}
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
-  bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics,},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers,}
+@inproceedings{beugnot21ot,
+  title     = {Improving approximate optimal transport distances using quantization},
+  author    = {Beugnot, Gaspard and Genevay, Aude and Greenewald, Kristjan and Solomon, Justin},
+  booktitle = {Proceedings of the Thirty-Seventh Conference on Uncertainty in Artificial Intelligence},
+  pages     = {290--300},
+  year      = {2021},
+  editor    = {de Campos, Cassio and Maathuis, Marloes H.},
+  volume    = {161},
+  series    = {Proceedings of Machine Learning Research},
+  month     = {27--30 Jul},
+  publisher = {PMLR},
+  pdf       = {https://proceedings.mlr.press/v161/beugnot21a/beugnot21a.pdf},
+  url       = {https://proceedings.mlr.press/v161/beugnot21a.html},
+  abstract  = {Optimal transport (OT) is a popular tool in machine learning to compare probability measures geometrically, but it comes with substantial computational burden. Linear programming algorithms for computing OT distances scale cubically in the size of the input, making OT impractical in the large-sample regime. We introduce a practical algorithm, which relies on a quantization step, to estimate OT distances between measures given cheap sample access. We also provide a variant of our algorithm to improve the performance of approximate solvers, focusing on those for entropy-regularized transport. We give theoretical guarantees on the benefits of this quantization step and display experiments showing that it behaves well in practice, providing a practical approximation algorithm that can be used as a drop-in replacement for existing OT estimators.},
+  selected  = {false},
+  conf      = {UAI21}
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein, A. and Podolsky, B. and Rosen, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.,},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  altmetric={248277},
-  dimensions={true},
-  selected={true}
-}
-
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik,},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
-}
-
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.,},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
+@misc{beugnot22stepsizeconvex,
+  doi       = {10.48550/ARXIV.2202.13733},
+  url       = {https://arxiv.org/abs/2202.13733},
+  author    = {Beugnot, Gaspard and Mairal, Julien and Rudi, Alessandro},
+  keywords  = {Machine Learning (stat.ML), Machine Learning (cs.LG), Optimization and Control (math.OC), FOS: Computer and information sciences, FOS: Computer and information sciences, FOS: Mathematics, FOS: Mathematics},
+  title     = {On the Benefits of Large Learning Rates for Kernel Methods},
+  publisher = {arXiv},
+  year      = {2022},
+  copyright = {Creative Commons Attribution 4.0 International},
+  abstract  = {This paper studies an intriguing phenomenon related to the good generalization performance of estimators obtained by using large  learning rates within gradient descent algorithms. First observed in the deep learning literature, we show that a phenomenon can be precisely characterized in the context of kernel methods, even though the resulting optimization problem is convex. Specifically, we consider the minimization of a quadratic objective in a separable Hilbert space, and show that with early stopping, the choice of learning rate influences the spectral decomposition of the obtained solution on the Hessian's eigenvectors. This extends an intuition described by Nakkiran (2020) on a two-dimensional toy problem to realistic learning scenarios such as kernel ridge regression. While large learning rates may be proven beneficial as soon as there is a mismatch between the train and test objectives, we further explain why it already occurs in classification tasks without assuming any particular mismatch between train and test data distributions.},
+  pdf       = {https://arxiv.org/pdf/2202.13733.pdf},
+  selected  = {true},
+  conf      = {COLT22},
+  arxiv     = {https://arxiv.org/abs/2202.13733}
 }
 
 @book{przibram1967letters,

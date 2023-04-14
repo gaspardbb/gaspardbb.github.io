@@ -2,24 +2,22 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: 3rd year PhD student in Machine Learning and Optimization.
 
 profile:
   align: right
-  image: prof_pic.jpg
-  image_circular: false # crops the image to make it circular
-  address: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+  image: me.jpeg
+  address: 
 
 news: true  # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+Welcome to my personal page. Learn more about my research interests and my latest news here! 
 
-Put your address / P.O. box / other info right below your picture. You can also disable any these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+I'm currently a third-year PhD student at ENS and Inria, under the supervision of [Julien Mairal](thoth.inrialpes.fr/people/mairal/) and [Alessandro Rudi](https://www.di.ens.fr/~rudi/). My research focuses on theoretical properties of kernel methods in all sorts of flavour, but I'm also interested in providing fast and reliable implementation of my research projects. 
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+Currently, I'm interested in non-convex optimization, and I'm enthusiastic about [Rust](https://www.rust-lang.org/), [Julia](https://julialang.org/), and various flavors of functional programming languages.
+
+Before that, I graduated from [Ecole Polytechnique](https://www.polytechnique.edu) (X2016) and got a master from École Normale Supérieure in Mathematics, Vision and Machine Learning in 2020 ([Master MVA](https://www.master-mva.com/)).
