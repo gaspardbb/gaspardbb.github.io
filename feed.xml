@@ -1,2 +1,224 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://gaspardbb.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://gaspardbb.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2022-06-20T09:16:05+00:00</updated><id>https://gaspardbb.github.io/feed.xml</id><title type="html">blank</title><subtitle>Gaspard Beugnot&apos;s personal webpage. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://gaspardbb.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://gaspardbb.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-04-14T15:34:38+00:00</updated><id>https://gaspardbb.github.io/feed.xml</id><title type="html">blank</title><subtitle>Gaspard Beugnot&apos;s personal webpage. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">From Python to Julia</title><link href="https://gaspardbb.github.io/blog/2023/imperative_programming/" rel="alternate" type="text/html" title="From Python to Julia" /><published>2023-03-30T00:00:00+00:00</published><updated>2023-03-30T00:00:00+00:00</updated><id>https://gaspardbb.github.io/blog/2023/imperative_programming</id><content type="html" xml:base="https://gaspardbb.github.io/blog/2023/imperative_programming/"><![CDATA[<p>Python is a highly prevalent programming language, widely known for its user-friendly syntax and extensive library ecosystem, particularly for machine learning and web development. Because of this remarkable combination, a large part of the Python community does not have a computer science background. Personally, as an applied mathematics practitioner, I adopted Python for course projects about five years ago, primarily as a means to implement algorithms derived from academic literature. At that time, I did not question the underlying qualities of this tool - its design principles, limitations, how it actually <em>worked</em>.</p>
+
+<p>This discussion is for Python users who don’t have a strong background in computer science but often use Python and its scientific computing libraries. It aims to provide some basic programming concepts while also highlighting the language’s limitations. I will explain why I opted for a different programming language and the lessons I learned, particularly in machine learning implementation.</p>
+
+<p>In my opinion, reflecting on our programming practices provides a foundation for better coding approaches that result in enhanced productivity. Moreover, it helps us understand how the tools we use can affect the way we conduct our research and work. Indeed, programming languages are tools that reflect the way knowledge is organized through user-contributed libraries. Given the ever more complex science we produce, this is a subject I’m passionate about.</p>
+
+<p><em>The text features collapsible boxes containing more advanced concepts. They are not necessary to understand my main message, feel free to skip them!</em></p>
+
+<h2 id="my-use-of-python-and-why-i-switched">My use of Python and why I switched</h2>
+
+<p>Python has a lot of amazing libraries that make it really powerful, like Numpy for scientific computing, Scikit-learn for machine learning, and Pytorch for automatic differentiation and GPU computing.  It’s pretty incredible that you can get these tools for free and use them to make complex models with just a few lines of code, even without much computer knowledge. And I’m not just talking about the newest and fanciest language models (even though Llama, Meta’s contender to GPT4, is just <a href="https://github.com/facebookresearch/llama/blob/main/llama/model.py" title="Llama's repo">~200LOC long to describe</a>). Just look at <a href="https://scikit-learn.org/stable/auto_examples/index.html" title="Scikit Learn page">scikit-learn example’s page</a>, which showcases dozens of ML algorithms that you can run in a few lines of code.</p>
+
+<p>Yet the more I understood it, the more I became annoyed by some part of the language; I decided to switch when I had to deal with polynomials, in an ongoing project aiming at minimizing them globally with an optimality certificate – a project in the line of <a href="https://en.wikipedia.org/wiki/Sum-of-squares_optimization" title="SoS on Wikipedia">Lasserre’s Sum of Square hierarchy</a> and their recent extension, <a href="https://arxiv.org/abs/2012.11978" title="Kernel SoS on arXiv">Kernel Sum of Square</a>. Consider for instance polynomial evaluation. Basically, you can define a polynomial \(f\) in \(\mathbb{R}^d\) as a collection of \(n\) coefficients of degree \(p_i \in \mathbb{N}^d\), with \(i \in (1, n)\). That is,</p>
+
+\[\forall x \in \mathbb{R}^d, ~~ f(x) = \sum_{i=1}^n \alpha_i \prod_{k=1}^d x_k^{p_{ik}}\]
+
+<p>To evaluate this function in Python, you could use broadcasting; you would define an array \(p\) of size \((n, d)\) and do something like</p>
+
+<pre><code class="language-Python">np.sum(alpha * np.prod(x ** p, axis=1), axis=0)  # f(x)
+</code></pre>
+
+<details><summary>What is broadcasting?</summary>
+<p>Broadcasting describes how NumPy (or other tensor librairies such as PyTorch or Jax) <em>vectorizes</em> operations on arrays. A simple illustration of vectorization is the following. 
+When I started Python (we’ve all been beginners once right), I wrote <code class="language-plaintext highlighter-rouge">for</code> loops to iterate through my arrays, and I was happy with that. For instance, to compute</p>
+
+\[\sum_{i=1}^n f(x_i)^2\]
+
+<p>I would do</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+</code></pre></div></div>
+
+<p>Then my code took a very long time to process modest image batch of \(100 \times 100\) pixels, and I learned that iterating element by element on Numpy arrays was a terrible practice. A much more efficient way to compute the sum is to write</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>That is what <a href="https://en.wikipedia.org/wiki/Array_programming" title="Vectorization on Wikipedia">vectorization</a> is about: instead of processing elements one at a time, we write operations on <em>all</em> the elements of an array at once. This results in much faster computation as the code uses efficient C librairies instead of Python native ones. In the code snippet above, \(x \mapsto f(x)^2\) is applied on all the elements of <code class="language-plaintext highlighter-rouge">x</code> at once.</p>
+
+<p>Indeed, Python is an interpreted language which is designed for ease of use rather than speed. Yet, good performances can be achieved by calling code in C, a much more powerful (hence difficult to master) language. Hopefully, awesome libraries like Numpy enables easy prototyping while preserving great C-like performances. It comes as a cost, such as not being able to iterate through an array element by element. Using Python without those libraries is totally unrealistic for real project (take the results of <a href="https://greenlab.di.uminho.pt/wp-content/uploads/2017/09/paperSLE.pdf" title="What are the most environmental-friendly PL?">such study</a> with a pinch of salt).</p>
+</details>
+
+<p>However, this solution is unsatisfactory for at least 2 reasons:</p>
+
+<ol>
+  <li>The most efficient and stable way to evaluate a polynomial is through <a href="https://en.wikipedia.org/wiki/Horner%27s_method" title="Horner's method on wikipedia">Horner’s method</a>, which uses a recursion which cannot be implemented efficiently in Python. <em>Admittedly, this is not a big issue for a code used in research</em>.</li>
+  <li>Most importantly, we might want to express this polynomial in another basis. This require another representation that can’t be efficiently implemented with Numpy.</li>
+</ol>
+
+<details><summary>Not convinced? More on polynomial representation</summary>
+<p>We may want to define \(p\) in a basis \(B_j\) of polynomial of degree \(j\) in \(\mathbb{R}\). \(f\) is then written</p>
+
+\[\forall x \in \mathbb{R}^d, ~~ f(x) = \sum_{i=1}^n \alpha_i \prod_{k=1}^d \sum_{j=0}^{p_{ik}} b_{ikj} B_j(x_k)\]
+
+<p>Implementing this <em>efficiently</em> in Python is far from easy. Indeed, broadcasting acts on arrays, and arrays have the same size in all dimension. Here, the coefficients \(b_{ikj}\) have size \(n, d\) for the first two dimensions \(i, k\). However, the third dimension has size \(p_{ik}\) which is not constant across all the \((i, k)\). A workaround would be to define \(b\) as an array of size \((n, d, p_{\max})\) where \(p_{\max} = \max_{i, k} p_{ik}\), and pad \(b\) with zeros. However, this allocates unnecessary memory.</p>
+
+<p>To obtain an efficient implementation, one observes that if \(B_j\) is an orthogonal polynomial, it satisfies a <a href="https://en.wikipedia.org/wiki/Favard%27s_theorem" title="Favard's Theorem">2nd ordre relation</a> of the form</p>
+
+\[B_j = \alpha_j(x) B_{j-1} + \beta_j B_{j-2}.\]
+
+<p>Ordinary examples of orthogonal polynomial includes the canonical basis \(B_j = x^j\), the <a href="https://en.wikipedia.org/wiki/Chebyshev_polynomials" title="Chebychev polynomials">Chebychev series</a> (very useful for function approximation), the <a href="https://en.wikipedia.org/wiki/Hermite_polynomials" title="Hermite polynomials">Hermite basis</a> (used e.g. as eigenfunction of the Fourier Transform), etc.</p>
+
+<p>Such relation enables a very efficient and stable evaluation of</p>
+
+\[\sum_{j=0}^{p} b_{j} B_j(x)\]
+
+<p>with Clenshaw’s algorithm, whose Honner’s method is a special case.</p>
+
+<p>On top of that, these 2nd order relation enables to easily change the basis of \(f\). For instance, we can recenter a polynomial on the ball of center \(m\) and radius \(r\) by considering \(x \mapsto f((x-m)/r)\) in the basis \(B_j((x-m)/r)\).</p>
+
+<p>Anyways, it was my use case and switching to Julia made all this implementation very easy.</p>
+</details>
+
+<h2 id="enters-julia">Enters Julia</h2>
+<p><a href="https://julialang.org/" title="Julia's webpage">Julia</a>’s main aspect is being a compiled language which feels like an interpreted language. Compiled languages are languages which go through a two steps process: they are first translated into machine code then executed; on the other hand, interpreted languages are executed directly. Compiled languages are faster, while interpreted languages are easier to prototype with. I won’t go into more details about the distinction between interpreted and compiled language (and some might argue that <a href="https://tratt.net/laurie/blog/2023/compiled_and_interpreted_languages_two_ways_of_saying_tomato.html" title="Tratt's blog">compiled and interpreted languages is two ways of saying tomato</a>), but Julia is designed to find the best balance for researchers who need both speed for heavy numerical computations and quick prototyping to test models. Julia achieves this by using “just in time” compilation, which means that each function is compiled the first time it’s called.</p>
+
+<p>Coming from Python, one of the thing I love most about Julia is being able to write as many <code class="language-plaintext highlighter-rouge">for</code> loops as I want without having to worry about broadcasting. For instance, evaluating efficiently the polynomial I mentioned before is straightforward. Just write <code class="language-plaintext highlighter-rouge">for</code> loops.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"Evaluates a multidimensional polynomial"</span>
+<span class="k">function</span><span class="nf"> </span><span class="o">(</span><span class="n">f</span><span class="o">::</span><span class="n">MDCanonicalExpanded</span><span class="x">{</span><span class="n">T</span><span class="x">})(</span><span class="n">x</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="x">{</span><span class="n">T</span><span class="x">})</span> <span class="k">where</span> <span class="x">{</span><span class="n">T</span><span class="x">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">zero</span><span class="x">(</span><span class="n">T</span><span class="x">)</span>
+    <span class="k">for</span> <span class="x">(</span><span class="n">k</span><span class="x">,</span> <span class="n">aₖ</span><span class="x">)</span> <span class="n">∈</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">coefficients</span><span class="x">(</span><span class="n">f</span><span class="x">))</span>
+        <span class="n">∏</span> <span class="o">=</span> <span class="n">one</span><span class="x">(</span><span class="n">T</span><span class="x">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="n">∈</span> <span class="mi">1</span><span class="o">:</span><span class="n">dim</span><span class="x">(</span><span class="n">f</span><span class="x">)</span>
+            <span class="c"># realpolys(f)[k, i] contains all the coefficients b_ki</span>
+            <span class="n">∏</span> <span class="o">*=</span> <span class="n">clenshaw</span><span class="x">(</span><span class="n">realpolys</span><span class="x">(</span><span class="n">f</span><span class="x">)[</span><span class="n">k</span><span class="x">,</span> <span class="n">i</span><span class="x">],</span> <span class="n">x</span><span class="x">[</span><span class="n">i</span><span class="x">])</span>
+        <span class="k">end</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="n">aₖ</span> <span class="o">*</span> <span class="n">∏</span>
+    <span class="k">end</span>
+    <span class="n">r</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Another great thing about Julia is that you don’t have to deal with the “<em>two languages barrier</em>”. In Python, when you work with moderately complex programs, you often have to rely on external libraries written in C because of Python’s poor performance. Although these libraries often exist thanks to the large community, if you want to change something in the library or understand how it works better, you need to know C, which can be frustrating.
+In contrast, since pure Julia code is performant, you can usually see the source code for almost everything. In other words, Julia relies less on external libraries for scientific computation. For instance, you can see the implementation of common functions such as the trigonometric functions <code class="language-plaintext highlighter-rouge">sin</code> and <code class="language-plaintext highlighter-rouge">cos</code>. Have you ever wonder how your computer evaluates them? Well, simply through Taylor expansion. To evaluate <code class="language-plaintext highlighter-rouge">sin(x)</code>, Julia <a href="https://github.com/JuliaLang/julia/blob/17cfb8e65ead377bf1b4598d8a9869144142c84e/base/special/trig.jl#L29" title="Julia's source code">firsts checks the domain</a> of <code class="language-plaintext highlighter-rouge">x</code>, then <a href="https://github.com/JuliaLang/julia/blob/17cfb8e65ead377bf1b4598d8a9869144142c84e/base/special/trig.jl#L69" title="Julia's source code">uses a polynomial approximation</a> which is valid up to machine precision on \([\pi/4, \pi/4]\). I reproduce the code here:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Coefficients in 13th order polynomial approximation on [0; π/4]</span>
+<span class="c">#     sin(x) ≈ x + S1*x³ + S2*x⁵ + S3*x⁷ + S4*x⁹ + S5*x¹¹ + S6*x¹³</span>
+<span class="c"># D for double, S for sin, number is the order of x-1</span>
+<span class="kd">const</span> <span class="n">DS1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.66666666666666324348e-01</span>
+<span class="kd">const</span> <span class="n">DS2</span> <span class="o">=</span> <span class="mf">8.33333333332248946124e-03</span>
+<span class="kd">const</span> <span class="n">DS3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.98412698298579493134e-04</span>
+<span class="kd">const</span> <span class="n">DS4</span> <span class="o">=</span> <span class="mf">2.75573137070700676789e-06</span>
+<span class="kd">const</span> <span class="n">DS5</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.50507602534068634195e-08</span>
+<span class="kd">const</span> <span class="n">DS6</span> <span class="o">=</span> <span class="mf">1.58969099521155010221e-10</span>
+
+<span class="nd">@inline</span> <span class="k">function</span><span class="nf"> sin_kernel</span><span class="x">(</span><span class="n">y</span><span class="o">::</span><span class="kt">Float64</span><span class="x">)</span>
+    <span class="n">y²</span> <span class="o">=</span>  <span class="n">y</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">y⁴</span> <span class="o">=</span>  <span class="n">y²</span><span class="o">*</span><span class="n">y²</span>
+    <span class="n">r</span>  <span class="o">=</span>  <span class="nd">@horner</span><span class="x">(</span><span class="n">y²</span><span class="x">,</span> <span class="n">DS2</span><span class="x">,</span> <span class="n">DS3</span><span class="x">,</span> <span class="n">DS4</span><span class="x">)</span> <span class="o">+</span> <span class="n">y²</span><span class="o">*</span><span class="n">y⁴</span><span class="o">*</span><span class="nd">@horner</span><span class="x">(</span><span class="n">y²</span><span class="x">,</span> <span class="n">DS5</span><span class="x">,</span> <span class="n">DS6</span><span class="x">)</span>
+    <span class="n">y³</span> <span class="o">=</span>  <span class="n">y²</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">y</span><span class="o">+</span><span class="n">y³</span><span class="o">*</span><span class="x">(</span><span class="n">DS1</span><span class="o">+</span><span class="n">y²</span><span class="o">*</span><span class="n">r</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>I find it amazing not to be limited to using libraries written in another language. To some extent, scientific Python is all about manipulating libraries written in C, which is not the case for Julia, where everything is written in Julia. For instance, you don’t have to set aside an algorithm simply because the computation of the <code class="language-plaintext highlighter-rouge">erf</code> function is too costly, or because you want to use the <a href="https://en.wikipedia.org/wiki/Faddeeva_function" title="Fadeeva function on wikipedia">Fadeeva function</a> which is implemented almost nowhere. You can simply compute a Taylor approximation and write it in Julia, and <em>specialize it</em> to your use case. In Python, such low-level manipulation requires C code and are not accessible to users who don’t speak C. All that illustrates the two languages-barrier.</p>
+
+<p>Another useful aspect, but admittedly of minor importance is unicode support in Julia. That is, you can write code such as</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">xₜ₊₁</span> <span class="o">=</span> <span class="n">xₜ</span> <span class="o">-</span> <span class="n">η</span> <span class="o">*</span> <span class="n">∇f</span><span class="x">(</span><span class="n">xₜ</span><span class="x">)</span>
+</code></pre></div></div>
+<p>and that is perfectly fine. This provides a more direct conversion from math formula to computer code.</p>
+
+<p>For instance, Julia was great for polynomial evaluation I already mentioned, but also for other complex function evaluation involving multiple nested loops, or simply rejection sampling. This can be done in Python with broadcasting, but it’s much easier in Julia! This sample an element from <code class="language-plaintext highlighter-rouge">proba</code> which is not in <code class="language-plaintext highlighter-rouge">set</code>.</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> samplewithrejection</span><span class="x">(</span><span class="n">proba</span><span class="x">,</span> <span class="n">Ω</span><span class="x">)</span>
+    <span class="n">ntries</span><span class="x">,</span> <span class="n">maxtries</span> <span class="o">=</span> <span class="mi">0</span><span class="x">,</span> <span class="mi">1000</span>
+    <span class="k">while</span> <span class="nb">true</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">sample1from</span><span class="x">(</span><span class="n">proba</span><span class="x">)</span>
+        <span class="n">sample</span> <span class="n">∉</span> <span class="n">Ω</span> <span class="o">&amp;&amp;</span> <span class="k">return</span> <span class="n">s</span>
+        <span class="x">((</span><span class="n">ntries</span> <span class="o">+=</span> <span class="mi">1</span><span class="x">)</span> <span class="o">&gt;</span> <span class="n">maxtries</span><span class="x">)</span> <span class="o">&amp;&amp;</span> <span class="n">break</span>
+    <span class="k">end</span>
+    <span class="n">error</span><span class="x">(</span><span class="s">"Reached max number of rejection sampling (1000)"</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>All this was great, but as my comprehension of Julia grew I started encountering real issues with the language.</p>
+
+<details><summary>More details about Julia</summary>
+<p>Julia is relatively easy to master, especially if you’re at ease with Numpy or any other tensor library. The paradigm Julia relies on – <a href="https://www.youtube.com/watch?v=kc9HwsxE1OY&amp;themeRefresh=1" title="A video on multiple dispatch">multiple dispatch</a> – ends up being quite intuitive, enabling a whole range of coding practice from object oriented to functional. The fact that function <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#man-dot-operators" title="Julia's docs">do not automatically broadcast</a> is a great choice in my opinion: in Julia, if <code class="language-plaintext highlighter-rouge">x</code> is an array, <code class="language-plaintext highlighter-rouge">exp(x)</code> returns an error. Vectorization is performed when a dot <code class="language-plaintext highlighter-rouge">.</code> is added, i.e. <code class="language-plaintext highlighter-rouge">exp.(x)</code> applies <code class="language-plaintext highlighter-rouge">exp</code> element wise to <code class="language-plaintext highlighter-rouge">x</code>. After a while, it seems natural to distinguish between the two and <code class="language-plaintext highlighter-rouge">np.exp(x)</code> feels weird, even more as <code class="language-plaintext highlighter-rouge">exp(x)</code> could refer to the <a href="https://en.wikipedia.org/wiki/Matrix_exponential" title="Matrix exponential on Wikipedia">operator exponential</a> if <code class="language-plaintext highlighter-rouge">x</code> is a square matrix.</p>
+
+<p>One thing I took a while to master is <a href="https://docs.julialang.org/en/v1/manual/performance-tips/#Write-%22type-stable%22-functions" title="Julia's docs">type stability</a> which can be quite hard to debug.</p>
+</details>
+
+<h2 id="is-an-imperative-language-really-the-solution">Is an imperative language really the solution?</h2>
+
+<p>I was very happy writing all the <code class="language-plaintext highlighter-rouge">for</code> loops I needed until I learned that… There are not <em>that</em> fast. Indeed, to quantify the speed of a program one does not stop at whether the underlying language is compiled or interpreted, nor to which target it compiles to; optimization is still crucial for precise and frequently executed operations. I was initially excited to have the freedom to write any algorithm in Julia, but soon realized that my naive implementations weren’t always as fast as they could be.</p>
+
+<p>Let me give you one example, for which I won’t go into too much details. Say you want to perform matrix multiplication, i.e.
+\(A \in \mathbb{R}^{m \times n}, B \in \mathbb{R}^{n \times p}, ~~ C_{ij} = \sum_{k = 1}^n A_{ik} B_{kj}, ~~ (i, j) \in (1,m) \times (m, p),\)</p>
+
+<p>which you do writing a <code class="language-plaintext highlighter-rouge">for</code> loop, e.g.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span> <span class="n">∈</span> <span class="mi">1</span><span class="o">:</span><span class="n">m</span><span class="x">,</span> <span class="n">j</span> <span class="n">∈</span> <span class="mi">1</span><span class="o">:</span><span class="n">p</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">zero</span><span class="x">(</span><span class="n">T</span><span class="x">)</span>  <span class="c"># T is the type (e.g. float32) of the arrays</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="n">∈</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="x">[</span><span class="n">i</span><span class="x">,</span> <span class="n">k</span><span class="x">]</span> <span class="o">*</span> <span class="n">B</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="n">j</span><span class="x">]</span>
+    <span class="k">end</span>
+    <span class="n">C</span><span class="x">[</span><span class="n">i</span><span class="x">,</span> <span class="n">j</span><span class="x">]</span> <span class="o">.=</span> <span class="n">s</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Naturally, crafting the loop requires more effort than utilizing the <code class="language-plaintext highlighter-rouge">C = A * B</code> shortcut, but let us set aside that notion for the sake of this discussion.
+Does the resulting program perform as quickly as invoking <code class="language-plaintext highlighter-rouge">C = A * B</code>? I previously believed that it was approximately so, but that is not the case. Not even close. The loop’s slower performance stems from the fact that the specific structure of the loop enables many optimizations, such as arranging data in a manner that optimizes the microprocessor’s allocation of ressources. Packages such as <a href="https://github.com/JuliaSIMD/LoopVectorization.jl" title="LoopVectorization.jl on GitHub">LoopVectorization.jl</a> try to alleviate this issue, but that is another layer of knowledge required to achieve a flawless implementation. However, using <code class="language-plaintext highlighter-rouge">C = A * B</code> allows the compiler to recognize that it is executing a matrix multiplication and call the <a href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms#Level_3" title="gemm on Wikipedia"><code class="language-plaintext highlighter-rouge">gemm</code> routine</a>, a function that has been heavily optimized over the past few decades.</p>
+
+<p>This example is somewhat contrived, but it illustrates the fact that Numpy’s broadcasting requirements compel its users to write better code. It moves us away from a term that was coined on <a href="https://news.ycombinator.com/item?id=33968572" title="HackerNews thread">HackerNews</a> called “Potato Programming” (<a href="https://en.wikipedia.org/wiki/One_potato,_two_potato" title="reference on Wikipedia">one potato, two potato, three potato</a>), which refers to algorithms that handle individual elements one at a time, prohibiting the compiler from parallelizing computations and thereby hurting performance. Conversely, vectorization inherently describes a sequence of operations performed on all the elements in an array. This is especially true when using GPU programming, which can produce immense speedups but necessitates the “all elements at once” methodology. <strong>Eventhough some aspects of NumPy are not practical, it forces the programmer to embrace better coding practice</strong>. By avoiding Python <code class="language-plaintext highlighter-rouge">for</code> loops, because they are so slow, we write efficient code <em>no matter the programming language we use</em>.</p>
+
+<p>A practical example is computing pairwise distances. If \(X \in \mathbb{R}^{n \times d}\) is a matrix containing \(n\) samples described by \(d\) features, we might wish to compute the distance between sample \(i\) and \(j\), that is \(\lVert X_{:, i} - X_{:, j} \rVert^2\) for all \(i, j \in (1, n)\). A broadcasted approach would look like <code class="language-plaintext highlighter-rouge">np.sum(np.abs2(X - X.T), axis=1)</code>. This formulation computes twice as many operations as a loop-based approach (since \(d_{ij} = d_{ji}\)), but it is ten times faster in a typical implementation.</p>
+
+<details><summary>Code sample for computing pairwise distances</summary>
+<p>I spent the same time to write each function. I simply checked that they compiled and that they were type stable. I obtained<d-footnote>In Julia, arrays are stored in memory in column-major order, hence here `X` is the transpose of the previous example.</d-footnote>:</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Those function write the pairwise distances in the array R</span>
+<span class="n">pw_broadcasted!</span><span class="x">(</span><span class="n">R</span><span class="x">,</span> <span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">R</span> <span class="o">.=</span> <span class="n">sum</span><span class="x">(</span><span class="n">abs2</span><span class="o">.</span><span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">X</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">X</span><span class="x">)</span><span class="o">...</span><span class="x">)</span> <span class="o">.-</span> <span class="n">X</span><span class="err">'</span><span class="x">),</span> <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="x">)[</span><span class="o">:</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span>
+<span class="n">pw_for!</span><span class="x">(</span><span class="n">R</span><span class="x">,</span> <span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="k">begin</span>
+    <span class="nd">@inbounds</span> <span class="k">for</span> <span class="n">i</span> <span class="n">∈</span> <span class="n">axes</span><span class="x">(</span><span class="n">X</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="n">∈</span> <span class="n">i</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">X</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">abs2</span><span class="o">.</span><span class="x">(</span><span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">-</span> <span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">j</span><span class="x">]))[]</span>
+            <span class="n">R</span><span class="x">[</span><span class="n">i</span><span class="x">,</span> <span class="n">j</span><span class="x">]</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="n">R</span><span class="x">[</span><span class="n">j</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">using</span> <span class="n">BenchmarkTools</span>
+<span class="n">d</span><span class="x">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span><span class="x">,</span> <span class="mi">100</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">randn</span><span class="x">(</span><span class="n">d</span><span class="x">,</span> <span class="n">n</span><span class="x">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="n">eltype</span><span class="x">(</span><span class="n">X</span><span class="x">),</span> <span class="n">n</span><span class="x">,</span> <span class="n">n</span><span class="x">)</span>
+
+<span class="c"># @btime pw_broadcasted!(R, X)</span>
+<span class="c">#   59.458 μs (14 allocations: 937.88 KiB)</span>
+
+<span class="c"># julia&gt; @btime pw_for!(R, X)</span>
+<span class="c">#   560.125 μs (20200 allocations: 2.77 MiB)</span>
+</code></pre></div></div>
+<p>The loop version can probably be improved but again, they are equal in the time I spent writing them.</p>
+</details>
+
+<p>A relevant concept is the distinction between imperative and declarative programming styles. Imperative programming involves explicitly specifying all the changes made to the program’s state, while declarative programming involves describing what needs to be done and relying on existing implementations of simpler functions to carry out the task. A good example in my opinion is the “<a href="https://numpy.org/doc/stable/reference/generated/numpy.einsum.html#numpy.einsum" title="Einsum on Numpy's doc">Einsum</a>” function in NumPy, which is based on <a href="https://en.wikipedia.org/wiki/Einstein_notation" title="Einsum on Wikipedia">Einstein notations</a>. With Einsum, the user simply writes out the computation they want to perform without worrying about the implementation details. Typically, the matrix multiplication example from earlier can be written as <code class="language-plaintext highlighter-rouge">np.einsum('ik,kj', A, B)</code> (check <a href="https://github.com/mcabbott/Tullio.jl" title="Tullio.jl on GitHub">Tullio.jl</a> for Julia). I find these tools amazing for a few reasons:</p>
+
+<ul>
+  <li>First of all, they are easy to read: we directly know what is happening in mathematical terms, which can be difficult with loops and abominable with broadcasting;</li>
+  <li>They can be extended to all sorts of transformation, see e.g. <a href="https://github.com/arogozhnikov/einops" title="Einops on GitHub">Einops</a>;</li>
+  <li>They can be optimized to rearrange the terms in order to make the least possible computation, see e.g. <a href="https://optimized-einsum.readthedocs.io/en/stable/" title="opt_einops documentation">opt_einops</a>;</li>
+  <li>They exemplify the paradigm which aims at delegating complicated computation to more optimized routines. It is aligned with this quote of <a href="https://blog.rust-lang.org/2015/05/11/traits.html" title="Rust's documentation">Rust documentation</a> “C++ implementations obey the zero-overhead principle: What you don’t use, you don’t pay for. And further: What you do use, you couldn’t hand code any better.” [Stroustrup].</li>
+</ul>
+
+<p>That’s when I realized that I was happy with a language that provided low-level control over operations, but I <em>needed</em> librairies with a sturdy set of function I could call without fear of being suboptimal. Actually, all the tensor libraries I came across actually push their user <em>not</em> to iterate through the arrays, for the performance reasons I mentioned. E.g. the <a href="https://github.com/rust-ndarray/ndarray#readme" title="ndarray on GitHub"><code class="language-plaintext highlighter-rouge">ndarray</code> crate in Rust</a> states “Prefer higher order methods and arithmetic operations on arrays first, then iteration, and as a last priority using indexed algorithms.”</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>That’s what this post is about: I came to Julia expecting to optimize perfectly any programs I wanted. However, I came to realize that achieving such a feat requires an immense amount of knowledge, or at least it is extremely difficult to compete with preexisting highly specialized routines. I believe this is a direct consequence of the evolution of science in the past 70 years: science has become too complex for one to be able to grasp all the spectrum from its core principles to its final implementation. I doubt we will see another Albert Einstein or any other scientific genius who could, by their own, drastically change the way science is done. 
+In other words, science has entered a stage of extreme specialization, where one must delegate some parts of their research to other fields in order to push the limits of knowledge. This requires the creation of appropriate tools to facilitate the sharing of science and knowledge<d-footnote>I'm no epistemologist, this statement might be wrong or someone has probably thought about this better before but well, that's what a blog post is about.</d-footnote>.</p>
+
+<p>In conclusion, we must strike a balance between not being constrained by the tools we use (for instance, I desire the ability to efficiently implement polynomials) while also navigating an increasingly complex scientific landscape that necessitates using and trusting tools we have not personally developed. On top of that, the difference we highlighted between two coding paradigms (imperative vs. declarative) has huge consequences on the performances of automatic differentiation, a core tenet of deep learning. But that’s a story for another post!</p>
+
+<hr />
+
+<h3 id="what-should-you-choose">What should you choose?</h3>
+
+<p>If you are proficient with Numpy and the rest, there is no harm sticking with it. While not as flexible as other languages, those are incredible libraries, very efficient and promoting good coding practices. But if you are tired of messing up with broadcasting, Julia is easy to master and has lot to offer. Just remember not to abuse loops, or do it wisely! And you will likely learn a lot in the process 😉</p>
+
+<hr />
+
+<p><em>Thanks to to <a href="https://www.linkedin.com/in/celiaescribe/?originalSubdomain=fr" title="LinkedIn page">Célia Escribe</a> for her valuable feedback!</em></p>]]></content><author><name>Gaspard Beugnot</name></author><summary type="html"><![CDATA[Imperative vs declarative programming languages for scientific computing]]></summary></entry></feed>
