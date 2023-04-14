@@ -24,6 +24,12 @@
             <abbr class="badge">{{entry.abbr}}</abbr>
           {%- endif -%}
         {%- endif -%}
+        {% if entry.conf %}
+          <span class="conf badge">{{entry.conf}}</span>
+        {% endif %}
+        {% if entry.award %}
+          <span class="award badge">{{entry.award}}</span>
+        {% endif %}
         </div>
 
         <!-- Entry bib key -->
@@ -183,6 +189,9 @@
           {%- endif %}
           {%- if entry.website %}
             <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">Website</a>
+          {%- endif %}
+          {%- if entry.video %}
+            <a href="{{ entry.video }}" class="btn btn-sm z-depth-0" role="button">Video</a>
           {%- endif %}
           </div>
           {% if site.badges %}
