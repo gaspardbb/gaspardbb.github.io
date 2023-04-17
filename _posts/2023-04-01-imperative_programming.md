@@ -256,9 +256,8 @@ In conclusion, we must strike a balance between not being constrained by the too
 
 ### What should you choose? 
 
-If you are proficient with Numpy and the rest, there is no harm sticking with it. While not as flexible as other languages, those are incredible libraries, very efficient and promoting good coding practices. But if you are tired of messing up with broadcasting, Julia is easy to master and has lot to offer. Just remember not to abuse loops, or do it wisely! And you will likely learn a lot in the process 😉
+I thought that imperative languages such as C or Julia were necessary for serious scientific computing, but I'm not convinced anymore. If you are proficient with Numpy and the rest, there is no harm sticking with it. While not as flexible as other languages, those are incredible libraries, very efficient and promoting good coding practices. But if you are tired of messing up with broadcasting, Julia is easy to master and has lot to offer. Just remember not to abuse loops, or do it wisely! And you will likely learn a lot in the process 😉
 
 *** 
 
-
-*Thanks to to [Célia Escribe](https://www.linkedin.com/in/celiaescribe/?originalSubdomain=fr "LinkedIn page") for her valuable feedback!*
+*Thanks to [Célia Escribe](https://www.linkedin.com/in/celiaescribe/?originalSubdomain=fr "LinkedIn page") for her valuable feedback!*
