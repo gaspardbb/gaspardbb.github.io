@@ -205,19 +205,17 @@ Does the resulting program perform as quickly as invoking `C = A * B`? I previou
 
 This example is somewhat contrived, but it illustrates the fact that Numpy's broadcasting requirements compel its users to write better code. It moves us away from a term that was coined on [HackerNews](https://news.ycombinator.com/item?id=33968572 "HackerNews thread") called "Potato Programming" ([one potato, two potato, three potato](https://en.wikipedia.org/wiki/One_potato,_two_potato "reference on Wikipedia")), which refers to algorithms that handle individual elements one at a time, prohibiting the compiler from parallelizing computations and thereby hurting performance. Conversely, vectorization inherently describes a sequence of operations performed on all the elements in an array. This is especially true when using GPU programming, which can produce immense speedups but necessitates the "all elements at once" methodology. **Eventhough some aspects of NumPy are not practical, it forces the programmer to embrace better coding practice**. By avoiding Python `for` loops, because they are so slow, we write efficient code _no matter the programming language we use_.
 
-A practical example is computing pairwise distances. If $$ X \in \mathbb{R}^{n \times d} $$ is a matrix containing $$ n $$ samples described by $$ d $$ features, we might wish to compute the distance between sample $$ i $$ and $$ j $$, that is $$ \lVert X_{:, i} - X_{:, j} \rVert^2 $$ for all $$ i, j \in (1, n) $$. A broadcasted approach would look like `np.sum(np.abs2(X - X.T), axis=1)`. This formulation computes twice as many operations as a loop-based approach (since $$ d_{ij} = d_{ji} $$), but it is ten times faster in a typical implementation.
+A practical example is computing pairwise distances. If $$ X \in \mathbb{R}^{n \times d} $$ is a matrix containing $$ n $$ samples described by $$ d $$ features, we might wish to compute the distance between sample $$ i $$ and $$ j $$, that is $$ \lVert X_{:, i} - X_{:, j} \rVert^2 $$ for all $$ i, j \in (1, n) $$. A broadcasted approach would look like `np.sum(np.abs2(X - X.T), axis=1)`. This formulation computes twice as many operations as a loop-based approach (since $$ d_{ij} = d_{ji} $$), but it is five times faster in a typical implementation.
 
 {% details Code sample for computing pairwise distances %}
 I spent the same time to write each function. I simply checked that they compiled and that they were type stable. I obtained<d-footnote>In Julia, arrays are stored in memory in column-major order, hence here `X` is the transpose of the previous example.</d-footnote>:
 ```julia
 # Those function write the pairwise distances in the array R
-pw_broadcasted!(R, X) = (R .= sum(abs2.(reshape(X, 1, size(X)...) .- X'), dims=2)[:, 1, :])
+pw_broadcasted!(R, X) = (R .= view(sum(abs2.(reshape(X, 1, size(X)...) .- X'), dims=2), :, 1, :))
 pw_for!(R, X) = begin
     @inbounds for i ∈ axes(X, 2)
         for j ∈ i:size(X, 2)
-            d = sum(abs2.(X[:, i] - X[:, j]))[]
-            R[i, j] = d
-            R[j, i] = d
+            R[i, j] = R[j, i] = @views sum(abs2.(X[:, i] - X[:, j]))
         end
     end
 end
@@ -227,11 +225,11 @@ d, n = 10, 100
 X = randn(d, n)
 R = zeros(eltype(X), n, n)
 
-# @btime pw_broadcasted!(R, X)
-#   59.458 μs (14 allocations: 937.88 KiB)
+# @btime pw_broadcasted!($R, $X)
+#   61.792 μs (12 allocations: 859.70 KiB)
 
-# julia> @btime pw_for!(R, X)
-#   560.125 μs (20200 allocations: 2.77 MiB)
+# @btime pw_for!($R, $X)
+#   239.167 μs (10100 allocations: 1.39 MiB)
 ```
 The loop version can probably be improved but again, they are equal in the time I spent writing them. 
 {% enddetails  %}
