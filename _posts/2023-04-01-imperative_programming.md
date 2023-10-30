@@ -258,4 +258,4 @@ I thought that imperative languages such as C or Julia were necessary for seriou
 
 *** 
 
-*Thanks to [Célia Escribe](https://www.linkedin.com/in/celiaescribe/?originalSubdomain=fr "LinkedIn page") for her valuable feedback!*
+*Thanks to [Célia Escribe](https://www.linkedin.com/in/celiaescribe/?originalSubdomain=fr "LinkedIn page") and [David Métivier](http://www.cmap.polytechnique.fr/~david.metivier/ "Personal page") for their valuable feedback!*
