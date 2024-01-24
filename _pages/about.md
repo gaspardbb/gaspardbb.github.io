@@ -14,7 +14,7 @@ latest_posts: true  # includes a list of the newest posts
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 
-open_to_work: true
+open_to_work: false
 ---
 
 Welcome to my personal page. Learn more about my research interests and my latest news here! 
@@ -25,4 +25,4 @@ Currently, I'm interested in non-convex optimization, and I'm enthusiastic about
 
 Before that, I graduated from [Ecole Polytechnique](https://www.polytechnique.edu) (X2016) and got a master from École Normale Supérieure in Mathematics, Vision and Machine Learning in 2020 ([Master MVA](https://www.master-mva.com/)).
 
-Starting January 2024 I am opened to job positions. I am a creative problem solver, looking for impactful applications in machine learning and optimization. Here are my [publications](publications) and [resume](cv)! 
+<!-- Starting January 2024 I am opened to job positions. I am a creative problem solver, looking for impactful applications in machine learning and optimization. Here are my [publications](publications) and [resume](cv)!  -->
