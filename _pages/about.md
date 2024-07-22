@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: 3rd year PhD student in Machine Learning and Optimization.
+subtitle: Machine Learning & Optimization for quantum chip design
 
 profile:
   align: right
@@ -17,12 +17,10 @@ social: true  # includes social icons at the bottom of the page
 open_to_work: false
 ---
 
-Welcome to my personal page. Learn more about my research interests and my latest news here! 
+I'm currently a research scientist in Machine Learning and Optimization at [Alice & Bob](https://alice-bob.com/), to help design *cat qubits* to achieve fault-tolerant quantum computing. Specifically, I work on simulating quantum systems, chips calibration and state measurements with a mix of learning, optimization, optimal control and experiment design. The intersection between quantum physics and ML&Opt is fascinating! 
 
-I'm currently a third-year PhD student at ENS and Inria, under the supervision of [Julien Mairal](thoth.inrialpes.fr/people/mairal/) and [Alessandro Rudi](https://www.di.ens.fr/~rudi/). My research focuses on theoretical properties of kernel methods in all sorts of flavour, but I'm also interested in providing fast and reliable implementation of my research projects. 
+Before that I obtained a PhD from ENS and Inria, under the supervision of [Julien Mairal](thoth.inrialpes.fr/people/mairal/) and [Alessandro Rudi](https://www.di.ens.fr/~rudi/). My research focused on theoretical properties of kernel methods in all sorts of flavour. I'm also interested in scientific computing in general, and an user of Julia, Jax, and various flavours of functional programing. Find the manuscript [here](assets/pdf/thesis.pdf)! 
 
-Currently, I'm interested in non-convex optimization, and I'm enthusiastic about [Elixir](https://www.elixir-lang.org/), [Julia](https://julialang.org/), and various flavors of functional programming languages.
+**I'm always opened to academic collaborations. Don't hesitate to reach out!**
 
-Before that, I graduated from [Ecole Polytechnique](https://www.polytechnique.edu) (X2016) and got a master from École Normale Supérieure in Mathematics, Vision and Machine Learning in 2020 ([Master MVA](https://www.master-mva.com/)).
-
-<!-- Starting January 2024 I am opened to job positions. I am a creative problem solver, looking for impactful applications in machine learning and optimization. Here are my [publications](publications) and [resume](cv)!  -->
+*And before that*, I graduated from [Ecole Polytechnique](https://www.polytechnique.edu) (X2016) and got a master from École Normale Supérieure in Mathematics, Vision and Machine Learning in 2020 ([Master MVA](https://www.master-mva.com/)).
